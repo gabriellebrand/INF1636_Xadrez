@@ -1,13 +1,14 @@
-package Pecas;
+package pieces;
+import model.BoardModel;
 
-public class Bispo extends Peca {
+public class Bishop extends Piece {
 	
-	Bispo(int newx, int newy, int newcor)
+	public Bishop(int newx, int newy, int newcor)
 	{
 		super(newx, newy, newcor);
 	}
 	
-	private boolean nocaminho(Tabuleiro tab, int dx, int dy)
+	private boolean blockedPath(BoardModel board, int dx, int dy)
 	{
 		int i;
 		int signaldx;
@@ -23,23 +24,11 @@ public class Bispo extends Peca {
 		{
 			signaldx=0;
 		}
-		if (dy<0)
-		{
-			signaldy=-1;
-		}
-		else if (dy>0)
-		{
-			signaldy=1;
-		}
-		else
-		{
-			signaldy=0;
-		}
 		if (dx==dy)// diagonal movement
 		{
 			for (i=signaldx; Math.abs(i)<Math.abs(dx); i+=signaldx)
 			{
-				if (tab.existepeca(x+i, y+i))
+				if (board.validPiece(x+i, y+i))
 				{
 					return true;
 				}
@@ -50,7 +39,7 @@ public class Bispo extends Peca {
 		{
 			for (i=signaldx; Math.abs(i)<Math.abs(dx); i+=signaldx)
 			{
-				if (tab.existepeca(x+i, y-i))
+				if (board.validPiece(x+i, y-i))
 				{
 					return true;
 				}
@@ -58,7 +47,7 @@ public class Bispo extends Peca {
 			return false;
 		}
 	}
-	private boolean testmove (Tabuleiro tab, int newx, int newy)
+	public boolean testMove (BoardModel board, int newx, int newy)
 	{
 		int dx = newx-x;
 		int dy = newy-y;
@@ -68,23 +57,23 @@ public class Bispo extends Peca {
 		}
 		if (dx==dy || dx==-dy)
 		{
-			return !nocaminho(tab, dx, dy);
+			return !blockedPath(board, dx, dy);
 		}
 		return false;
 	}
 	
-	boolean move(Tabuleiro tab, int newx, int newy)
+	public boolean move(BoardModel board, int newx, int newy)
 	{
-		if (newx<0 || newx>7 || newy<0 ||newy>7) //movimento para fora do tabuleiro
+		if (newx<0 || newx>7 || newy<0 ||newy>7) //movimento para fora do boarduleiro
 		{
 			return false;
 		}
-		Peca pecadst = tab.getPeca(newx, newy);
-		if (pecadst.getcolor() == color) //tentando comer peca de mesma cor
+		Piece Piecedst = board.getPiece(newx, newy);
+		if (Piecedst.getcolor() == color) //tentando comer Piece de mesma cor
 		{
 			return false;
 		}
-		if (!testmove(tab, newx, newy)) //teste de movimento valido
+		if (!testMove(board, newx, newy)) //teste de movimento valido
 		{
 			return false;
 		}

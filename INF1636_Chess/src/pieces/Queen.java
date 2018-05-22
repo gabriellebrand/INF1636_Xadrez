@@ -1,13 +1,14 @@
-package Pecas;
+package pieces;
+import model.BoardModel;
 
-public class Rainha extends Peca {
+public class Queen extends Piece {
 	
-	Rainha(int newx, int newy, int newcor)
+	public Queen(int newx, int newy, int newcor)
 	{
 		super(newx, newy, newcor);
 	}
 	
-	private boolean nocaminho(Tabuleiro tab, int dx, int dy)
+	private boolean blockedPath(BoardModel board, int dx, int dy)
 	{
 		int i;
 		int signaldx, signaldy;
@@ -39,7 +40,7 @@ public class Rainha extends Peca {
 		{
 			for (i=signaldy; Math.abs(i)<Math.abs(dy); i+=signaldy)// teste equivalente a i*signaldy< dy*signaldy, mas mais legivel
 			{
-				if (tab.existepeca(x, y+i))
+				if (board.validPiece(x, y+i))
 				{
 					return true;
 				}
@@ -50,7 +51,7 @@ public class Rainha extends Peca {
 		{
 			for (i=signaldx; Math.abs(i)<Math.abs(dx); i+=signaldx)
 			{
-				if (tab.existepeca(x+i, y))
+				if (board.validPiece(x+i, y))
 				{
 					return true;
 				}
@@ -61,7 +62,7 @@ public class Rainha extends Peca {
 		{
 			for (i=signaldx; Math.abs(i)<Math.abs(dx); i+=signaldx)
 			{
-				if (tab.existepeca(x+i, y+i))
+				if (board.validPiece(x+i, y+i))
 				{
 					return true;
 				}
@@ -72,7 +73,7 @@ public class Rainha extends Peca {
 		{
 			for (i=signaldx; Math.abs(i)<Math.abs(dx); i+=signaldx)
 			{
-				if (tab.existepeca(x+i, y-i))
+				if (board.validPiece(x+i, y-i))
 				{
 					return true;
 				}
@@ -81,7 +82,7 @@ public class Rainha extends Peca {
 		}
 	}
 	
-	private boolean testmove (Tabuleiro tab, int newx, int newy)
+	public boolean testMove (BoardModel board, int newx, int newy)
 	{
 		int dx = newx-x;
 		int dy = newy-y;
@@ -91,27 +92,27 @@ public class Rainha extends Peca {
 		}
 		if (dx==0 || dy==0)
 		{
-			return !nocaminho(tab, dx, dy);
+			return !blockedPath(board, dx, dy);
 		}
 		if (dx==dy || dx==-dy)
 		{
-			return !nocaminho(tab, dx, dy);
+			return !blockedPath(board, dx, dy);
 		}
 		return false;
 	}
 	
-	boolean move(Tabuleiro tab, int newx, int newy)
+	public boolean move(BoardModel board, int newx, int newy)
 	{
-		if (newx<0 || newx>7 || newy<0 ||newy>7) //movimento para fora do tabuleiro
+		if (newx<0 || newx>7 || newy<0 ||newy>7) //movimento para fora do boarduleiro
 		{
 			return false;
 		}
-		Peca pecadst = tab.getPeca(newx, newy);
-		if (pecadst.getcolor() == color) //tentando comer peca de mesma cor
+		Piece pecadst = board.getPiece(newx, newy);
+		if (pecadst!=null && pecadst.getcolor()==color) //tentando comer peca de mesma cor
 		{
 			return false;
 		}
-		if (!testmove(tab, newx, newy)) //teste de movimento valido
+		if (!testMove(board, newx, newy)) //teste de movimento valido
 		{
 			return false;
 		}
