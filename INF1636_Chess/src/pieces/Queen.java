@@ -108,7 +108,7 @@ public class Queen extends Piece {
 			return false;
 		}
 		Piece pecadst = board.getPiece(newx, newy);
-		if (pecadst!=null && pecadst.getcolor()==color) //tentando comer peca de mesma cor
+		if (pecadst!=null && pecadst.getColor()==color) //tentando comer peca de mesma cor
 		{
 			return false;
 		}

@@ -82,7 +82,7 @@ public class Rook extends Piece {
 			return false;
 		}
 		Piece Piecedst = board.getPiece(newx, newy);
-		if (Piecedst.getcolor() == color) //tentando comer Piece de mesma cor
+		if (Piecedst.getColor() == color) //tentando comer Piece de mesma cor
 		{
 			return false;
 		}

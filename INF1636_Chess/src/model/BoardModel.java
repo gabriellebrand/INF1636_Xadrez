@@ -58,7 +58,7 @@ public class BoardModel {
 		{
 			for (int j=0; j<8; j++)
 			{
-				if (matrix[i][j]!=null && matrix[i][j].getcolor()!=color && matrix[i][j].attacks(this, x, y))
+				if (matrix[i][j]!=null && matrix[i][j].getColor()!=color && matrix[i][j].attacks(this, x, y))
 				{
 					return true;
 				}
