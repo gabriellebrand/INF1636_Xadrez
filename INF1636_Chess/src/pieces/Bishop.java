@@ -68,8 +68,8 @@ public class Bishop extends Piece {
 		{
 			return false;
 		}
-		Piece Piecedst = board.getPiece(newx, newy);
-		if (Piecedst.getColor() == color) //tentando comer Piece de mesma cor
+		Piece dstpiece = board.getPiece(newx, newy);
+		if (dstpiece!=null && dstpiece.getColor()==color) //tentando comer Piece de mesma cor
 		{
 			return false;
 		}
