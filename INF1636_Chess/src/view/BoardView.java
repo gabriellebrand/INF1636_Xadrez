@@ -24,7 +24,7 @@ public class BoardView extends JPanel {
 		this.setBackground(Color.WHITE);
 		
 		setBoardDimensions(lines, columns);
-		Pair[] images = new Pair[]{new Pair("queenW", "bin/images/queen_blue")};
+		Pair[] images = new Pair[]{new Pair("queenW", "INF1636_Chess/src/images/queen_blue.png")};
 		setPiecesImages(images);
 	}
 	
