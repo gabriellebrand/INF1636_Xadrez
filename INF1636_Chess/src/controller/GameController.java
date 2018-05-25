@@ -6,7 +6,8 @@ public class GameController {
 	
 	private GameController()
 	{
-		boardController = new BoardController();
+		gameCtrl = this;
+		new BoardController();
 	}
 	
 	public static GameController getInstance()
@@ -14,13 +15,17 @@ public class GameController {
 		if (gameCtrl == null)
 		{
 			System.out.println("create game");
-			gameCtrl = new GameController();
+			new GameController();
 		}
 		
 		return gameCtrl;
 	}
-	
+
 	public BoardController getBoardController() {
 		return boardController;
+	}
+	
+	public void setBoardController(BoardController b) {
+		boardController = b;
 	}
 }

@@ -11,6 +11,9 @@ public class BoardModel implements BoardObservable {
 	private Piece matrix[][];
 	private int lines = 8;
 	private int columns = 8;
+	private boolean selected = false;
+	private int selx, sely;
+	public int currplayer = 0;
 	
 	private List<BoardObserver> lst = new ArrayList<BoardObserver>();
 	
@@ -77,6 +80,33 @@ public class BoardModel implements BoardObservable {
 			}
 		}
 		return false;
+	}
+	
+	public boolean click(int x, int y)
+	{
+		if (selected)
+		{
+			if (matrix[selx][sely].move(this, x, y))
+			{
+				matrix[x][y] = matrix[selx][sely];
+				matrix[selx][sely] = null;
+				selected = false;
+				currplayer = 1 - currplayer; //changes 0<->1
+				return true;
+			}
+			return false;
+		}
+		else
+		{
+			if (matrix[x][y]==null && matrix[x][y].getColor()==currplayer)
+			{
+				selx = x;
+				sely = y;
+				selected = true;
+				return true;
+			}
+			return false;
+		}
 	}
 	
 	private void update()

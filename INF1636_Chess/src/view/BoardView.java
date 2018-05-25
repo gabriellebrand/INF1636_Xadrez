@@ -30,8 +30,9 @@ public class BoardView extends JPanel implements BoardObserver {
 		setPiecesImages(images);
 		
 		System.out.println("new view");
+
 		//se registra como observador do tabuleiro
-		//GameController.getInstance().getBoardController().registerObserver(this);
+		GameController.getInstance().getBoardController().registerObserver(this);
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -77,15 +78,15 @@ public class BoardView extends JPanel implements BoardObserver {
 	public void setPiecesImages(Pair[] images) {
 		pieceImage = new HashMap<String,Image>();
 		for (int i = 0; i < images.length; i++) {
-		Image image;
-		
-		try {
-			image = ImageIO.read(new File(images[i].getSecond()));
-		}
-		catch (IOException e) {
-			System.out.println(e.getMessage());
-			continue;
-		}
+			Image image;
+			
+			try {
+				image = ImageIO.read(new File(images[i].getSecond()));
+			}
+			catch (IOException e) {
+				System.out.println(e.getMessage());
+				continue;
+			}
 			Image imgScaled = image.getScaledInstance(cellWidth, cellHeight, 
 													Image.SCALE_SMOOTH);
 			pieceImage.put(images[i].getFirst(), imgScaled);

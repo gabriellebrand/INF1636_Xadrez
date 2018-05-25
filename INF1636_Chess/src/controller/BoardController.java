@@ -13,6 +13,8 @@ public class BoardController implements MouseListener {
 	private BoardModel boardModel;
 	
 	public BoardController() {
+		
+		GameController.getInstance().setBoardController(this);
 		boardModel = new BoardModel();
 		
 		boardView = new BoardView(800,800,8,8);
