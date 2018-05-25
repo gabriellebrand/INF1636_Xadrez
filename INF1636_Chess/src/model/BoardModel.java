@@ -1,12 +1,23 @@
 package model;
 
 import pieces.*;
+import observer.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.ListIterator;
 
-public class BoardModel {
-	Piece matrix[][];
+
+public class BoardModel implements BoardObservable {
+	private Piece matrix[][];
+	private int lines = 8;
+	private int columns = 8;
 	
-	BoardModel() //standard board
+	private List<BoardObserver> lst = new ArrayList<BoardObserver>();
+	
+	public BoardModel() //standard board
 	{
+		matrix = new Piece[lines][columns];
+		
 		matrix[0][0] = new Rook  (0,0,0); //white pieces
 		matrix[0][1] = new Knight(0,1,0);
 		matrix[0][2] = new Bishop(0,2,0);
@@ -19,7 +30,6 @@ public class BoardModel {
 		{
 			matrix[1][i] = new Pawn (1,i,0);
 		}
-		
 		matrix[7][0] = new Rook  (7,0,1); //black pieces
 		matrix[7][1] = new Knight(7,1,1);
 		matrix[7][2] = new Bishop(7,2,1);
@@ -40,6 +50,8 @@ public class BoardModel {
 				matrix[i][j]=null;
 			}
 		}
+		
+		this.update();
 	}
 
 	public Piece getPiece(int x, int y)
@@ -65,5 +77,34 @@ public class BoardModel {
 			}
 		}
 		return false;
+	}
+	
+	private void update()
+	{
+		ListIterator<BoardObserver> li = lst.listIterator();
+		
+		while(li.hasNext())
+			li.next().notify(this);
+	}
+
+	/************ OBSERVABLE METHODS ************/
+	@Override
+	public void add(BoardObserver o) {
+		// TODO Auto-generated method stub
+		lst.add(o);
+		
+	}
+
+	@Override
+	public void remove(BoardObserver o) {
+		// TODO Auto-generated method stub
+		lst.remove(o);
+		
+	}
+
+	@Override
+	public int get(int i) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

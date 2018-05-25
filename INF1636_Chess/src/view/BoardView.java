@@ -1,4 +1,7 @@
 package view;
+import observer.*;
+import controller.*;
+
 import javax.swing.JPanel;
 import javax.imageio.ImageIO;
 import java.awt.Color;
@@ -9,8 +12,7 @@ import java.util.Map;
 import java.awt.*;
 import resources.Pair;
 
-
-public class BoardView extends JPanel {
+public class BoardView extends JPanel implements BoardObserver {
 	private static final long serialVersionUID = 1L;
 	private int lines;
 	private int columns;
@@ -26,6 +28,10 @@ public class BoardView extends JPanel {
 		setBoardDimensions(lines, columns);
 		Pair[] images = new Pair[]{new Pair("queenW", "INF1636_Chess/src/images/queen_blue.png")};
 		setPiecesImages(images);
+		
+		System.out.println("new view");
+		//se registra como observador do tabuleiro
+		//GameController.getInstance().getBoardController().registerObserver(this);
 	}
 	
 	public void paintComponent(Graphics g) {
@@ -86,7 +92,8 @@ public class BoardView extends JPanel {
 		}
 	}
 	
-	private void paintBoard(Graphics g) {
+	private void paintBoard(Graphics g)
+	{
 		Graphics2D g2d = (Graphics2D) g;
 		for (int i = 0; i < lines; i++) {
 			for (int j = 0; j < lines; j++) {	
@@ -98,9 +105,16 @@ public class BoardView extends JPanel {
 		paintPiece(g, null, 100, 100);
 	}
 	
-	private void paintPiece(Graphics g, Component c, int x, int y) {
+	private void paintPiece(Graphics g, Component c, int x, int y)
+	{
 		Graphics2D g2d = (Graphics2D)g;
 		g2d.drawImage(pieceImage.get("queenW"), x, y, null);
 		
+	}
+	
+	@Override
+	public void notify(BoardObservable o)
+	{
+		System.out.println("MOVE");
 	}
 }

@@ -2,16 +2,27 @@ package controller;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
+import model.BoardModel;
 import view.BoardView;
 import view.Window;
 
+import observer.*;
+
 public class BoardController implements MouseListener {
 	private BoardView boardView;
+	private BoardModel boardModel;
 	
 	public BoardController() {
+		boardModel = new BoardModel();
+		
 		boardView = new BoardView(800,800,8,8);
 		boardView.addMouseListener(this);
 		new Window(800,800, boardView, "Xadrez");
+	}
+	
+	public void registerObserver(BoardObserver o)
+	{
+		boardModel.add(o);
 	}
 	
 	/* -------- Mouse Listener --------- */
