@@ -3,9 +3,9 @@ import model.BoardModel;
 
 public class Knight extends Piece {
 	
-	public Knight(int newx, int newy, int newcor)
+	public Knight(int newx, int newy, int newcor, String id)
 	{
-		super(newx, newy, newcor);
+		super(newx, newy, newcor, id);
 	}
 	
 	

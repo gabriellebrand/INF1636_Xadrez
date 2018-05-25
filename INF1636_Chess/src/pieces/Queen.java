@@ -3,9 +3,9 @@ import model.BoardModel;
 
 public class Queen extends Piece {
 	
-	public Queen(int newx, int newy, int newcor)
+	public Queen(int newx, int newy, int newcor, String id)
 	{
-		super(newx, newy, newcor);
+		super(newx, newy, newcor, id);
 	}
 	
 	private boolean blockedPath(BoardModel board, int dx, int dy)

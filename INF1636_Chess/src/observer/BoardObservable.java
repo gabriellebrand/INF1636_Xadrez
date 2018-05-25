@@ -1,9 +1,9 @@
 package observer;
 
 public interface BoardObservable {
-	void add(BoardObserver o);
+	public void add(BoardObserver o);
 	
-	void remove(BoardObserver o);
+	public void remove(BoardObserver o);
 	
-	int get(int i);
+	public String[][] get();
 }

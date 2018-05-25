@@ -18,6 +18,7 @@ public class BoardView extends JPanel implements BoardObserver {
 	private int cellWidth;
 	private int cellHeight;
 	private Color[][] cellColor;
+	private String[][] componentsID = null;
 	private Map<String, Image> pieceImages;
 	
 	public BoardView(int width, int height, int lines, int columns) {
@@ -26,21 +27,11 @@ public class BoardView extends JPanel implements BoardObserver {
 		
 		setBoardDimensions(lines, columns);
 		setCellBackgroundColors(new Color[] {Color.WHITE, Color.DARK_GRAY});
-		
-		System.out.println("new view");
 	}
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		paintBoard(g);
-	}
-	
-	public int getCellWidth() {
-		return this.cellWidth;
-	}
-	
-	public int getCellHeight() {
-		return this.cellHeight;
 	}
 	
 	private void paintBoard(Graphics g)
@@ -51,11 +42,11 @@ public class BoardView extends JPanel implements BoardObserver {
 				g2d.setColor(cellColor[i][j]);
 				// Desenha retângulo
 				g2d.fillRect(j*cellWidth, i*cellHeight, cellWidth, cellHeight);
+				
+				if (componentsID != null)
+					paintPiece(g2d, componentsID[i][j], i,j);
 			}
 		}
-		paintPiece(g, "bishopB", 1, 1);
-		paintPiece(g, "rookW", 1, 2);
-		paintPiece(g, "kingB", 2, 2);
 	}
 	
 	/*
@@ -66,13 +57,13 @@ public class BoardView extends JPanel implements BoardObserver {
 	 * 				line, column - posicao do tabuleiro onde sera'
 	 * 							   desenhada a peca
 	 */
-	private void paintPiece(Graphics g, String id, int line, int column)
+	private void paintPiece(Graphics2D g2d, String id, int line, int column)
 	{
-		if (pieceImages.get(id) != null)
+		//verifica se existe peca na posicao e se a imagem existe no data source
+		if (id != null && pieceImages.get(id) != null)
 		{
-			Graphics2D g2d = (Graphics2D)g;
-			g2d.drawImage(pieceImages.get(id), cellWidth*line, 
-						  cellHeight*column, null);	
+			g2d.drawImage(pieceImages.get(id), cellWidth*column, 
+						  cellHeight*line, null);	
 		}
 	}
 	
@@ -131,10 +122,19 @@ public class BoardView extends JPanel implements BoardObserver {
 		}
 	}
 	
+	public int getCellWidth() {
+		return this.cellWidth;
+	}
+	
+	public int getCellHeight() {
+		return this.cellHeight;
+	}
 	
 	@Override
 	public void notify(BoardObservable o)
 	{
-		System.out.println("MOVE");
+		//pega a nova posicao dos componentes (reposicionados pelo modelo) e redesenha
+		componentsID = o.get();
+		repaint();
 	}
 }

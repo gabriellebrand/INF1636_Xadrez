@@ -3,9 +3,9 @@ import model.BoardModel;
 
 public class Bishop extends Piece {
 	
-	public Bishop(int newx, int newy, int newcor)
+	public Bishop(int newx, int newy, int newcor, String id)
 	{
-		super(newx, newy, newcor);
+		super(newx, newy, newcor, id);
 	}
 	
 	private boolean blockedPath(BoardModel board, int dx, int dy)

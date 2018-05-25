@@ -4,9 +4,9 @@ import model.BoardModel;
 public class King extends Piece {
 
 	
-	public King(int newx, int newy, int newcor)
+	public King(int newx, int newy, int newcor, String id)
 	{
-		super(newx, newy, newcor);
+		super(newx, newy, newcor, id);
 	}
 	
 	public boolean testMove (BoardModel board, int newx, int newy)

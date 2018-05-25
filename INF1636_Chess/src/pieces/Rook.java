@@ -3,9 +3,9 @@ import model.BoardModel;
 
 public class Rook extends Piece {
 	
-	public Rook(int newx, int newy, int newcor)
+	public Rook(int newx, int newy, int newcor, String id)
 	{
-		super(newx, newy, newcor);
+		super(newx, newy, newcor, id);
 	}
 	
 	private boolean blockedPath(BoardModel board, int dx, int dy)

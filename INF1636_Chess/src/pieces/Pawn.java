@@ -5,9 +5,9 @@ public class Pawn extends Piece {
 	
 	boolean firstmove;
 	
-	public Pawn(int newx, int newy, int newcor)
+	public Pawn(int newx, int newy, int newcor, String id)
 	{
-		super(newx, newy, newcor);
+		super(newx, newy, newcor, id);
 		firstmove = true;
 	}
 	
