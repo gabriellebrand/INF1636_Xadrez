@@ -13,18 +13,27 @@ public class BoardController implements MouseListener {
 	private BoardModel boardModel;
 	
 	public BoardController() {
-		
-		GameController.getInstance().setBoardController(this);
 		boardModel = new BoardModel();
 		
 		boardView = new BoardView(800,800,8,8);
-		boardView.addMouseListener(this);
 		new Window(800,800, boardView, "Xadrez");
+	}
+	
+	public void setupBoard()
+	{
+		if (boardView == null)
+			return;
+		
+		//adiciona o controller como listener do mouse (isso nao esta mt certo)
+		boardView.addMouseListener(this);
+		//registra a view como observador do modelo
+		this.registerObserver(boardView);
 	}
 	
 	public void registerObserver(BoardObserver o)
 	{
-		boardModel.add(o);
+		if(boardModel != null)
+			boardModel.add(o);
 	}
 	
 	/* -------- Mouse Listener --------- */
@@ -37,6 +46,11 @@ public class BoardController implements MouseListener {
 		int coordY = y / boardView.getCellHeight();
 		System.out.print("posX= " + x + " posY= " + y + "\n" + 
 						 "coordX= " + coordX + "coordY= " + coordY + "\n");
+		
+		//comentado temporariamente pois a funcao esta abortando
+//		if(boardModel != null)
+//			boardModel.click(coordX, coordY);
+//		
 	}
 	
 	@Override public void mouseEntered(MouseEvent arg0) {}

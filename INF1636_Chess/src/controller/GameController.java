@@ -2,30 +2,30 @@ package controller;
 
 public class GameController {
 	private static GameController gameCtrl = null;
-	private BoardController boardController;
+	private BoardController boardCtrl;
 	
 	private GameController()
-	{
-		gameCtrl = this;
-		new BoardController();
-	}
+	{}
 	
 	public static GameController getInstance()
 	{
 		if (gameCtrl == null)
 		{
 			System.out.println("create game");
-			new GameController();
+			gameCtrl = new GameController();
 		}
 		
 		return gameCtrl;
 	}
 
-	public BoardController getBoardController() {
-		return boardController;
+	public BoardController getBoardController()
+	{
+		return boardCtrl;
 	}
 	
-	public void setBoardController(BoardController b) {
-		boardController = b;
+	public void startGame() 
+	{
+		boardCtrl = new BoardController();
+		boardCtrl.setupBoard();
 	}
 }

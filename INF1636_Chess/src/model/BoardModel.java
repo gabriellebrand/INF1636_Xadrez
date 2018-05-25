@@ -84,6 +84,8 @@ public class BoardModel implements BoardObservable {
 	
 	public boolean click(int x, int y)
 	{
+		update();
+		
 		if (selected)
 		{
 			if (matrix[selx][sely].move(this, x, y))

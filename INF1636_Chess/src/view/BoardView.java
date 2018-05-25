@@ -1,7 +1,6 @@
 package view;
 import observer.*;
-import controller.*;
-
+//import controller.*;
 import javax.swing.JPanel;
 import javax.imageio.ImageIO;
 import java.awt.Color;
@@ -32,7 +31,7 @@ public class BoardView extends JPanel implements BoardObserver {
 		System.out.println("new view");
 
 		//se registra como observador do tabuleiro
-		GameController.getInstance().getBoardController().registerObserver(this);
+		//GameController.getInstance().getBoardController().registerObserver(this);
 	}
 	
 	public void paintComponent(Graphics g) {
