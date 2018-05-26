@@ -26,7 +26,7 @@ public class BoardView extends JPanel implements BoardObserver {
 		this.setBackground(Color.WHITE);
 		
 		setBoardDimensions(lines, columns);
-		setCellBackgroundColors(new Color[] {Color.WHITE, Color.DARK_GRAY});
+		setCellBackgroundColors(new Color[] {Color.DARK_GRAY,Color.WHITE});
 	}
 	
 	public void paintComponent(Graphics g) {

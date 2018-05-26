@@ -8,13 +8,13 @@ import java.util.ListIterator;
 
 
 public class BoardModel implements BoardObservable {
+	public int currplayer = 0;
+	
 	private Piece matrix[][];
 	private int lines = 8;
 	private int columns = 8;
 	private boolean selected = false;
 	private int selx, sely;
-	public int currplayer = 0;
-	
 	private List<BoardObserver> lst = new ArrayList<BoardObserver>();
 	
 	public BoardModel() //standard board
