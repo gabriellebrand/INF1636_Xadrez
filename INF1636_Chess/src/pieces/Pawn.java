@@ -11,7 +11,7 @@ public class Pawn extends Piece {
 		firstmove = true;
 	}
 	
-	public boolean testMove (BoardModel board, int newx, int newy)
+	public boolean testMove (BoardModel board, int newx, int newy) //Destrocar o x e y
 	{
 		int dx = newx-x;
 		int dy = newy-y;
@@ -24,18 +24,18 @@ public class Pawn extends Piece {
 		{
 			if (dstpiece==null) //movement
 			{
-				if (dx==0 && dy==1)
+				if (dy==0 && dx==-1)
 				{
 					firstmove = false;
 					return true;
 				}
-				if (dx==0 && dy==2 && firstmove)
+				if (dy==0 && dx==-2 && firstmove)
 				{
 					firstmove = false;
 					return true;
 				}
 			}
-			else if (Math.abs(dx)==1 && dy==1 && dstpiece.getColor() != color) //attack
+			else if (Math.abs(dy)==1 && dx==-1 && dstpiece.getColor() != color) //attack
 			{
 				firstmove = false;
 				return true;
@@ -45,18 +45,18 @@ public class Pawn extends Piece {
 		{
 			if (dstpiece==null) //move
 			{
-				if (dx==0 && dy==-1)
+				if (dy==0 && dx==1)
 				{
 					firstmove = false;
 					return true;
 				}
-				if (dx==0 && dy==-2 && firstmove)
+				if (dy==0 && dx==2 && firstmove)
 				{
 					firstmove = false;
 					return true;
 				}
 			}
-			else if (Math.abs(dx)==1 && dy==-1 && dstpiece.getColor() != color) //attack
+			else if (Math.abs(dy)==1 && dx==1 && dstpiece.getColor() != color) //attack
 			{
 				firstmove = false;
 				return true;

@@ -63,9 +63,12 @@ public class BoardController implements MouseListener {
 		int coordY = y / boardView.getCellHeight();
 		System.out.print("line= " + coordY + " column= " + coordX + "\n");
 		
-		//comentado temporariamente pois a funcao esta abortando
-//		if(boardModel != null)
-//			boardModel.click(coordX, coordY);	
+		//Achar porque o x e y estão invertidos
+		if(boardModel != null)
+		{
+			boardModel.click(coordY, coordX);
+			boardModel.update();
+		}
 	}
 	
 	@Override public void mouseEntered(MouseEvent arg0) {}

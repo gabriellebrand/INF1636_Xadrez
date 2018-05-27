@@ -17,7 +17,11 @@ public class Knight extends Piece {
 		{
 			return false;
 		}
-		if (Math.abs(dx)==2 && Math.abs(dy)==3)
+		if (Math.abs(dx)==1 && Math.abs(dy)==2)
+		{
+			return true;
+		}
+		if (Math.abs(dx)==2 && Math.abs(dy)==1)
 		{
 			return true;
 		}
