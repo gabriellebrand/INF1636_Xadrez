@@ -4,25 +4,25 @@ public class Pair {
     private Object x;
     private Object y;
 
-    public Pair(String first, String second)
+    public Pair(Object first, Object second)
     {
         this.x = first;
         this.y = second;
     }
 
-    public String getFirst() {
-        return (String)x;
+    public Object getFirst() {
+        return x;
     }
 
-    public void setFirst(String x) {
+    public void setFirst(Object x) {
         this.x = x;
     }
 
-    public String getSecond() {
-        return (String)y;
+    public Object getSecond() {
+        return (Object)y;
     }
 
-    public void setSecond(String y) {
+    public void setSecond(Object y) {
         this.y = y;
     }
 

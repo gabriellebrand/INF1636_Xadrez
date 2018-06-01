@@ -1,15 +1,14 @@
 package view;
 import observer.*;
-//import controller.*;
 import javax.swing.JPanel;
 import javax.imageio.ImageIO;
 import java.awt.Color;
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
-import java.awt.*;
 import resources.Pair;
+import java.util.Map;
+import java.util.HashMap;
 
 public class BoardView extends JPanel implements BoardObserver {
 	private static final long serialVersionUID = 1L;
@@ -17,14 +16,18 @@ public class BoardView extends JPanel implements BoardObserver {
 	private int columns;
 	private int cellWidth;
 	private int cellHeight;
+	private Color highlightColor = new Color(255, 0, 0, 100);
+	private Color selectedColor = Color.RED.darker();
 	private Color[][] cellColor;
-	private String[][] componentsID = null;
+	private Boolean[][] highlightCells;
+	private String[][] pieceIDs = null;
+	private Pair selectedPos = null;
 	private Map<String, Image> pieceImages;
 	
 	public BoardView(int width, int height, int lines, int columns) {
 		this.setSize(width, height);
 		this.setBackground(Color.WHITE);
-		
+
 		setBoardDimensions(lines, columns);
 		setCellBackgroundColors(new Color[] {Color.DARK_GRAY,Color.WHITE});
 	}
@@ -38,15 +41,52 @@ public class BoardView extends JPanel implements BoardObserver {
 	{
 		Graphics2D g2d = (Graphics2D) g;
 		for (int i = 0; i < lines; i++) {
-			for (int j = 0; j < lines; j++) {	
+			for (int j = 0; j < columns; j++) {
+				// Desenha retângulo do tabuleiro
 				g2d.setColor(cellColor[i][j]);
-				// Desenha retângulo
 				g2d.fillRect(j*cellWidth, i*cellHeight, cellWidth, cellHeight);
 				
-				if (componentsID != null)
-					paintPiece(g2d, componentsID[i][j], i,j);
+				//Pinta areas selecionadas (movimentos possiveis da peca)
+				paintHighlightedCells(g2d, i, j);
+				
+				if (pieceIDs != null)
+					paintPiece(g2d, pieceIDs[i][j], i,j);
 			}
 		}
+		if (selectedPos != null)
+			paintSelectedPiece(g2d, (int)selectedPos.getFirst(), (int)selectedPos.getSecond());	
+	}
+	
+	/*
+	 * Description: Desenha um retangulo vermelho transparente para marcar
+	 * 				a área de movimento da peça
+	 * Params[in]:  g2d  - contexto da area de desenho
+	 * 				line, column - posicao do tabuleiro onde será
+	 * 							   desenhado retangulo
+	 */
+	private void paintHighlightedCells(Graphics2D g2d, int line, int column)
+	{
+		if (highlightCells[line][column]) {
+			g2d.setColor(highlightColor);
+			g2d.fillRect(column*cellWidth, line*cellHeight, cellWidth, cellHeight);
+		}
+	}
+	
+	/*
+	 * Description: Desenha uma borda em volta da casa onde está 
+	 * 				a peça selecionada
+	 * Params[in]:  g2d  - contexto da area de desenho
+	 * 				line, column - posicao do tabuleiro onde será
+	 * 							   desenhada a borda
+	 */
+	private void paintSelectedPiece(Graphics2D g2d, int line, int column)
+	{
+		float thickness = 6;
+		Stroke oldStroke = g2d.getStroke();
+		g2d.setColor(selectedColor);
+		g2d.setStroke(new BasicStroke(thickness));
+		g2d.drawRect(column*cellWidth, line*cellHeight, cellWidth, cellHeight);
+		g2d.setStroke(oldStroke);
 	}
 	
 	/*
@@ -86,16 +126,25 @@ public class BoardView extends JPanel implements BoardObserver {
 	 * Params[in]:  colors - array com as cores que serao usadas para
 	 * 				pintar o fundo
 	 */
-	protected void setCellBackgroundColors(Color[] colors) {
+	protected void setCellBackgroundColors(Color[] colors)
+	{
 		int colorIndex = 0;
 		cellColor = new Color[lines][columns];
+		highlightCells = new Boolean[lines][columns];
+		
 		for (int i = 0; i < lines; i++) {
 			colorIndex = (colorIndex + 1) % colors.length;
 			for (int j = 0; j < columns; j++) {
+				highlightCells[i][j] = false;
 				cellColor[i][j] = colors[colorIndex];
 				colorIndex = (colorIndex + 1) % colors.length;
 			}
 		}
+	}
+	
+	public void setHighlightColor(Color color)
+	{
+		highlightColor = color;
 	}
 	
 	/*
@@ -110,7 +159,7 @@ public class BoardView extends JPanel implements BoardObserver {
 			Image image;
 			
 			try {
-				image = ImageIO.read(new File(images[i].getSecond()));
+				image = ImageIO.read(new File((String)images[i].getSecond()));
 			}
 			catch (IOException e) {
 				System.out.println(e.getMessage());
@@ -118,7 +167,7 @@ public class BoardView extends JPanel implements BoardObserver {
 			}
 			Image imgScaled = image.getScaledInstance(cellWidth, cellHeight, 
 													  Image.SCALE_SMOOTH);
-			pieceImages.put(images[i].getFirst(), imgScaled);
+			pieceImages.put((String)images[i].getFirst(), imgScaled);
 		}
 	}
 	
@@ -134,7 +183,9 @@ public class BoardView extends JPanel implements BoardObserver {
 	public void notify(BoardObservable o)
 	{
 		//pega a nova posicao dos componentes (reposicionados pelo modelo) e redesenha
-		componentsID = o.get();
+		pieceIDs = o.getPiecesPosition();
+		highlightCells = o.getHighlightedCells();
+		selectedPos = o.getSelectedPosition();
 		repaint();
 	}
 }

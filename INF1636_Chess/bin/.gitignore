@@ -1,5 +1,7 @@
-/model/
-/pieces/
-/observer/
-/view/
 /controller/
+/images/
+/model/
+/observer/
+/pieces/
+/resources/
+/view/

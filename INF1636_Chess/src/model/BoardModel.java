@@ -1,8 +1,10 @@
 package model;
 
 import pieces.*;
+import resources.Pair;
 import observer.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -11,6 +13,8 @@ public class BoardModel implements BoardObservable {
 	public int currplayer = 0;
 	
 	private Piece matrix[][];
+	Boolean[][] possibleMoves;
+	private Pair selectedPos;
 	private int lines = 8;
 	private int columns = 8;
 	private boolean selected = false;
@@ -43,6 +47,11 @@ public class BoardModel implements BoardObservable {
 		for (int i=0; i<columns; i++)
 			matrix[6][i] = new Pawn (6,i,0, "pawnW");
 
+		//Inicializa matriz que armazena movimentos possiveis da peca
+		possibleMoves = new Boolean[lines][columns];
+		for (int i=0;i<lines;i++)
+			Arrays.fill(possibleMoves[i], false);
+		
 		this.update();
 	}
 
@@ -73,13 +82,21 @@ public class BoardModel implements BoardObservable {
 	
 	public boolean click(int x, int y)
 	{	
+		selectedPos = null;
+		for (int i=0;i<lines;i++)
+			Arrays.fill(possibleMoves[i], false);
+		
 		if (selected)
 		{
 			if (matrix[x][y] != null && matrix[x][y].getColor()==matrix[selx][sely].getColor())
 			{
+				//TODO: atualizar matriz possibleMoves com os movimentos possiveis
+				//		da peça. true = movimento possivel, false = impossivel
 				System.out.printf("Reselecionado %d %d\n", x, y);
 				selx = x;
 				sely = y;
+				//Atualiza a posicao da peca atualmente selecionada
+				selectedPos = new Pair(x,y);
 				return true;
 			}
 			else if (matrix[selx][sely].move(this, x, y))
@@ -98,10 +115,14 @@ public class BoardModel implements BoardObservable {
 		{
 			if (matrix[x][y] != null && matrix[x][y].getColor()==currplayer)
 			{
+				//TODO: atualizar matriz possibleMoves com os movimentos possiveis
+				//		da peça. true = movimento possivel, false = impossivel
 				System.out.printf("Selecionado %d %d\n", x, y);
 				selx = x;
 				sely = y;
 				selected = true;
+				//Atualiza a posicao da peca atualmente selecionada
+				selectedPos = new Pair(x,y);
 				return true;
 			}
 			if (matrix[x][y] == null)
@@ -114,8 +135,6 @@ public class BoardModel implements BoardObservable {
 			}
 			return false;
 		}
-		
-		//TODO: chamar o metodo update()
 	}
 	
 	public void update()
@@ -146,7 +165,7 @@ public class BoardModel implements BoardObservable {
 	 * 					     recebem null.
 	 */
 	@Override
-	public String[][] get() {
+	public String[][] getPiecesPosition() {
 		String idMatrix[][] = new String[lines][columns];
 		
 		for(int i=0; i<lines; i++)
@@ -159,5 +178,15 @@ public class BoardModel implements BoardObservable {
 			}
 		}
 		return idMatrix;
+	}
+
+	@Override
+	public Boolean[][] getHighlightedCells() {
+		return possibleMoves;
+	}
+
+	@Override
+	public Pair getSelectedPosition() {
+		return selectedPos;
 	}
 }
