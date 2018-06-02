@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.ListIterator;
+import controller.GameController;
 
 
 public class BoardModel implements BoardObservable {
@@ -71,7 +72,8 @@ public class BoardModel implements BoardObservable {
 		{
 			for (int j=0; j<8; j++)
 			{
-				if (matrix[i][j] != null && matrix[i][j].getColor() != color && matrix[i][j].attacks(this, x, y))
+				if (matrix[i][j] != null && matrix[i][j].getColor() != color 
+					&& matrix[i][j].attacks(this, x, y))
 				{
 					return true;
 				}
@@ -88,7 +90,8 @@ public class BoardModel implements BoardObservable {
 		
 		if (selected)
 		{
-			if (matrix[x][y] != null && matrix[x][y].getColor()==matrix[selx][sely].getColor())
+			if (matrix[x][y] != null &&
+				matrix[x][y].getColor()==matrix[selx][sely].getColor())
 			{
 				//TODO: atualizar matriz possibleMoves com os movimentos possiveis
 				//		da peça. true = movimento possivel, false = impossivel
@@ -105,6 +108,11 @@ public class BoardModel implements BoardObservable {
 				matrix[x][y] = matrix[selx][sely];
 				matrix[selx][sely] = null;
 				selected = false;
+				
+				if (isPawnPromotion(x, y))
+					GameController.getInstance().getBoardController().
+								   activatePawnPromotion(x, y);
+
 				currplayer = 1 - currplayer; //changes 0<->1
 				return true;
 			}
@@ -137,10 +145,20 @@ public class BoardModel implements BoardObservable {
 		}
 	}
 	
+	private boolean isPawnPromotion (int line, int column)
+	{
+		if(matrix[line][column] != null && matrix[line][column] instanceof Pawn)
+		{
+			if ((currplayer == 0 && line == 0) || 
+				(currplayer == 1 && line == lines-1))
+				return true;
+		}
+		return false;
+	}
+	
 	public void update()
 	{
 		ListIterator<BoardObserver> li = lst.listIterator();
-		
 		//notifica aos observers que o tabuleiro foi modificado
 		while(li.hasNext())
 			li.next().notify(this);

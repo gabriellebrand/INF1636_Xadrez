@@ -1,22 +1,25 @@
 package controller;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 import model.BoardModel;
 import view.BoardView;
+import view.PawnMenu;
 import view.Window;
 import observer.*;
 import resources.Pair;
 
-public class BoardController implements MouseListener {
+public class BoardController implements MouseListener, ActionListener {
 	private BoardView boardView;
 	private BoardModel boardModel;
+	private PawnMenu pawnMenu;
 	
 	public BoardController() {
 		boardModel = new BoardModel();
 		boardView = new BoardView(800,800,8,8);
 		new Window(800,800, boardView, "Xadrez");
-	
 	}
 	
 	public void setupBoard()
@@ -28,6 +31,8 @@ public class BoardController implements MouseListener {
 		boardView.addMouseListener(this);
 		//registra a view como observador do modelo (chamar dessa forma nao esta mt certo)
 		registerObserver(boardView);
+		//adiciona o menu popup da promoção do peão
+		pawnMenu = new PawnMenu(this);
 		
 		//adiciona as imagens das pecas na boardView
 		String path = "INF1636_Chess/src/images/";
@@ -53,26 +58,52 @@ public class BoardController implements MouseListener {
 			boardModel.add(o);
 	}
 	
+	private Pair translateCoords(int x, int y)
+	{
+		int coordX = x / boardView.getCellWidth();
+		int coordY = y / boardView.getCellHeight();
+		//System.out.print("line= " + coordY + " column= " + coordX + "\n");
+		
+		return new Pair(coordX, coordY);
+	}
+	
+	public void activatePawnPromotion(int line, int column) 
+	{
+		pawnMenu.show(boardView, column*boardView.getCellWidth(), 
+					  line*boardView.getCellHeight());
+	}
+	
 	/* -------- Mouse Listener --------- */
 	@Override
 	public void mouseClicked(MouseEvent event) {
+		if(event.getButton() != 1)
+			return;
+		
 		int x = event.getX();
 		int y = event.getY();
-		
-		int coordX = x / boardView.getCellWidth();
-		int coordY = y / boardView.getCellHeight();
-		System.out.print("line= " + coordY + " column= " + coordX + "\n");
 		
 		//Achar porque o x e y estão invertidos
 		if(boardModel != null)
 		{
-			boardModel.click(coordY, coordX);
-			boardModel.update();
+			Pair coords = translateCoords(x,y);
+			boardModel.click((int)coords.getSecond(), (int)coords.getFirst());
+			boardModel.update();		
 		}
 	}
 	
+	@Override public void mouseReleased(MouseEvent event) {}
 	@Override public void mouseEntered(MouseEvent arg0) {}
 	@Override public void mouseExited(MouseEvent arg0) {}
 	@Override public void mousePressed(MouseEvent arg0) {}
-	@Override public void mouseReleased(MouseEvent arg0) {}
+	
+	@Override
+	public void actionPerformed(ActionEvent event) {
+		// TODO Auto-generated method stub
+		System.out.println("Popup menu item ["
+	            + event.getActionCommand() + "] was pressed.");
+		//TODO: necessario pegar a posicao linha/coluna para saber
+		//		qual peão está sendo promovido.
+		//		- chamar o metodo do boardModel que promove o peão
+		
+	}
 }

@@ -10,6 +10,7 @@ import resources.Pair;
 import java.util.Map;
 import java.util.HashMap;
 
+
 public class BoardView extends JPanel implements BoardObserver {
 	private static final long serialVersionUID = 1L;
 	private int lines;
@@ -30,6 +31,8 @@ public class BoardView extends JPanel implements BoardObserver {
 
 		setBoardDimensions(lines, columns);
 		setCellBackgroundColors(new Color[] {Color.DARK_GRAY,Color.WHITE});
+		
+		
 	}
 	
 	public void paintComponent(Graphics g) {
