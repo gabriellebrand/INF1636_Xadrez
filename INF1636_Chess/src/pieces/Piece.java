@@ -48,8 +48,4 @@ public class Piece {
 		return testMove(board, newx, newy);
 	}
 	
-	public boolean draw()
-	{
-		return false;
-	}
 }
