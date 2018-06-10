@@ -9,17 +9,15 @@ import java.util.List;
 import java.util.ListIterator;
 import controller.GameController;
 
-
 public class BoardModel implements BoardObservable {
-	public int currplayer = 0;
-	
-	private Piece matrix[][];
-	Boolean[][] possibleMoves;
-	private Pair selectedPos;
-	private int lines = 8;
-	private int columns = 8;
+	private int currplayer = 0;
 	private boolean selected = false;
 	private int selx, sely;
+	private Pair selectedPos;
+	private Piece matrix[][];
+	Boolean[][] possibleMoves;
+	private int lines = 8;
+	private int columns = 8;
 	private List<BoardObserver> lst = new ArrayList<BoardObserver>();
 	
 	public BoardModel() //standard board
@@ -53,6 +51,58 @@ public class BoardModel implements BoardObservable {
 		for (int i=0;i<lines;i++)
 			Arrays.fill(possibleMoves[i], false);
 		
+		this.update();
+	}
+	
+	public void loadBoard(BoardFile boardFile)
+	{
+
+		//recupera estado do jogo
+		this.currplayer = boardFile.currplayer;
+		this.selected = boardFile.selected;
+		this.selx = boardFile.selx;
+		this.sely = boardFile.sely;
+		
+		matrix = new Piece[lines][columns];
+		for (int i = 0; i < lines; i++)
+			for (int j = 0; j < columns; j++)
+			{
+				if (boardFile.board[i][j] != null)
+				{
+					String piece = boardFile.board[i][j].substring(
+								   0, boardFile.board[i][j].length()-1);
+					String color = boardFile.board[i][j].substring(
+								   boardFile.board[i][j].length()-1);
+					
+					System.out.println("piece= " + piece + " color= " + color);
+					int player = color.equals("B") ? 1 : 0;
+					System.out.println("player= " + player);
+					switch (piece) {
+					case "bishop":
+						matrix[i][j] = new Bishop(i,j, player, boardFile.board[i][j]);
+						break;
+					case "king":
+						matrix[i][j] = new King(i,j, player, boardFile.board[i][j]);
+						break;
+					case "knight":
+						matrix[i][j] = new Knight(i,j, player, boardFile.board[i][j]);
+						break;
+					case "pawn":
+						matrix[i][j] = new Pawn(i,j, player, boardFile.board[i][j]);
+						break;
+					case "queen":
+						matrix[i][j] = new Queen(i,j, player, boardFile.board[i][j]);
+						break;
+					case "rook":
+						matrix[i][j] = new Rook(i,j, player, boardFile.board[i][j]);
+						break;
+					}
+				}
+			}
+		//reseta matriz de posicoes e selecao
+		for (int i=0;i<lines;i++)
+			Arrays.fill(possibleMoves[i], false);
+		selectedPos = null;
 		this.update();
 	}
 
@@ -154,6 +204,19 @@ public class BoardModel implements BoardObservable {
 				return true;
 		}
 		return false;
+	}
+	
+	public BoardFile getBoardState () 
+	{
+		BoardFile boardState = new BoardFile();
+		
+		boardState.board = this.getPiecesPosition();
+		boardState.currplayer = this.currplayer;
+		boardState.selected = this.selected;
+		boardState.selx = this.selx;
+		boardState.sely = this.sely;
+		
+		return boardState;
 	}
 	
 	public void update()

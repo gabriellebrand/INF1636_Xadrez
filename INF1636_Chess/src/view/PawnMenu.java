@@ -29,9 +29,4 @@ public class PawnMenu extends JPopupMenu {
 	{
 		this.show(e.getComponent(), e.getX(), e.getY());
 	}
-	
-//	public void show(Component invoker, int x, int y)
-//	{
-//		this.show(invoker, x, y);
-//	}
 }

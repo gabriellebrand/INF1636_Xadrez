@@ -3,12 +3,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+
+import javax.swing.JFrame;
+
 import view.BoardView;
 import view.PawnMenu;
 import view.BoardMenu;
 import view.PopupItem;
 import view.Window;
 import observer.*;
+import model.BoardFile;
 import model.BoardModel;
 import resources.Pair;
 
@@ -18,11 +22,11 @@ public class BoardController implements MouseListener, ActionListener {
 	private PawnMenu pawnMenu;
 	private BoardMenu boardMenu;
 	
-	public BoardController() {
+	public BoardController(JFrame parent) {
 		boardModel = new BoardModel();
 		boardView = new BoardView(800,800,8,8);
 		
-		new Window(800,800, boardView, "Xadrez");
+		parent.getContentPane().add(boardView);
 	}
 	
 	public void setupBoard()
@@ -78,6 +82,11 @@ public class BoardController implements MouseListener, ActionListener {
 					  line*boardView.getCellHeight());
 	}
 	
+	public void loadBoard(Object board)
+	{
+		this.boardModel.loadBoard((BoardFile)board);
+	}
+	
 	/* -------- Mouse Listener --------- */
 	@Override
 	public void mouseClicked(MouseEvent event) {}
@@ -119,7 +128,7 @@ public class BoardController implements MouseListener, ActionListener {
 		if (event.getActionCommand() == PopupItem.SaveState.getRawValue())
 		{
 			GameController gameCtrl = GameController.getInstance();
-			String[][] boardState = boardModel.getPiecesPosition();
+			BoardFile boardState = boardModel.getBoardState();
 			gameCtrl.fileCtrl.saveFile(boardState);
 		}
 	}
