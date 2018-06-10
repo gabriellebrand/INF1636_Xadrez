@@ -3,19 +3,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.File;
-
-import model.BoardModel;
 import view.BoardView;
 import view.PawnMenu;
+import view.BoardMenu;
+import view.PopupItem;
 import view.Window;
 import observer.*;
+import model.BoardModel;
 import resources.Pair;
 
 public class BoardController implements MouseListener, ActionListener {
 	private BoardView boardView;
 	private BoardModel boardModel;
 	private PawnMenu pawnMenu;
+	private BoardMenu boardMenu;
 	
 	public BoardController() {
 		boardModel = new BoardModel();
@@ -34,6 +35,8 @@ public class BoardController implements MouseListener, ActionListener {
 		registerObserver(boardView);
 		//adiciona o menu popup da promoção do peão
 		pawnMenu = new PawnMenu(this);
+		//adiciona o menu popup do botao direito
+		boardMenu = new BoardMenu(this);
 		
 		//adiciona as imagens das pecas na boardView
 		String path = "INF1636_Chess/src/images/";
@@ -95,10 +98,7 @@ public class BoardController implements MouseListener, ActionListener {
 		}
 		else if (event.getButton() == 3) //right button
 		{
-			GameController gameCtrl = GameController.getInstance();
-			
-			String[][] boardState = boardModel.getPiecesPosition();
-			gameCtrl.fileCtrl.saveFile(boardState);
+			boardMenu.show(event);
 		}
 	}
 	@Override public void mouseEntered(MouseEvent arg0) {}
@@ -114,5 +114,11 @@ public class BoardController implements MouseListener, ActionListener {
 		//		qual peão está sendo promovido.
 		//		- chamar o metodo do boardModel que promove o peão
 		
+		if (event.getActionCommand() == PopupItem.SaveState.getRawValue())
+		{
+		GameController gameCtrl = GameController.getInstance();
+			String[][] boardState = boardModel.getPiecesPosition();
+			gameCtrl.fileCtrl.saveFile(boardState);
+		}
 	}
 }

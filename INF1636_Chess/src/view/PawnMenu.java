@@ -1,9 +1,8 @@
 package view;
+
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
-
 import java.awt.event.ActionListener;
-//import java.awt.Component;
 import java.awt.event.MouseEvent;
 
 public class PawnMenu extends JPopupMenu {
@@ -12,13 +11,13 @@ public class PawnMenu extends JPopupMenu {
 	public PawnMenu(ActionListener actionListener)
 	{
 		super();
-		JMenuItem queen = new JMenuItem("Rainha");
+		JMenuItem queen = new JMenuItem(PopupItem.Queen.getRawValue());
 		queen.addActionListener(actionListener);
-		JMenuItem rook = new JMenuItem("Torre");
+		JMenuItem rook = new JMenuItem(PopupItem.Rook.getRawValue());
 		rook.addActionListener(actionListener);
-		JMenuItem bishop = new JMenuItem("Bispo");
+		JMenuItem bishop = new JMenuItem(PopupItem.Bishop.getRawValue());
 		bishop.addActionListener(actionListener);
-		JMenuItem knight = new JMenuItem("Cavalo");
+		JMenuItem knight = new JMenuItem(PopupItem.Knight.getRawValue());
 		knight.addActionListener(actionListener);
 		add(queen);
 		add(rook);
