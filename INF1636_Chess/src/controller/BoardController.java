@@ -21,6 +21,7 @@ public class BoardController implements MouseListener, ActionListener {
 	public BoardController() {
 		boardModel = new BoardModel();
 		boardView = new BoardView(800,800,8,8);
+		
 		new Window(800,800, boardView, "Xadrez");
 	}
 	
@@ -101,6 +102,7 @@ public class BoardController implements MouseListener, ActionListener {
 			boardMenu.show(event);
 		}
 	}
+	
 	@Override public void mouseEntered(MouseEvent arg0) {}
 	@Override public void mouseExited(MouseEvent arg0) {}
 	@Override public void mousePressed(MouseEvent arg0) {}
@@ -116,7 +118,7 @@ public class BoardController implements MouseListener, ActionListener {
 		
 		if (event.getActionCommand() == PopupItem.SaveState.getRawValue())
 		{
-		GameController gameCtrl = GameController.getInstance();
+			GameController gameCtrl = GameController.getInstance();
 			String[][] boardState = boardModel.getPiecesPosition();
 			gameCtrl.fileCtrl.saveFile(boardState);
 		}
