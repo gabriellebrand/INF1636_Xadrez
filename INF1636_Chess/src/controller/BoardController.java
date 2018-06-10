@@ -3,6 +3,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.File;
 
 import model.BoardModel;
 import view.BoardView;
@@ -75,23 +76,31 @@ public class BoardController implements MouseListener, ActionListener {
 	
 	/* -------- Mouse Listener --------- */
 	@Override
-	public void mouseClicked(MouseEvent event) {
-		if(event.getButton() != 1)
-			return;
-		
-		int x = event.getX();
-		int y = event.getY();
-		
-		//Achar porque o x e y estão invertidos
-		if(boardModel != null)
+	public void mouseClicked(MouseEvent event) {}
+	
+	@Override public void mouseReleased(MouseEvent event) 
+	{
+		if(event.getButton() == 1) //left button
 		{
-			Pair coords = translateCoords(x,y);
-			boardModel.click((int)coords.getSecond(), (int)coords.getFirst());
-			boardModel.update();		
+			int x = event.getX();
+			int y = event.getY();
+			
+			//Achar porque o x e y estão invertidos
+			if(boardModel != null)
+			{
+				Pair coords = translateCoords(x,y);
+				boardModel.click((int)coords.getSecond(), (int)coords.getFirst());
+				boardModel.update();		
+			}
+		}
+		else if (event.getButton() == 3) //right button
+		{
+			GameController gameCtrl = GameController.getInstance();
+			
+			String[][] boardState = boardModel.getPiecesPosition();
+			gameCtrl.fileCtrl.saveFile(boardState);
 		}
 	}
-	
-	@Override public void mouseReleased(MouseEvent event) {}
 	@Override public void mouseEntered(MouseEvent arg0) {}
 	@Override public void mouseExited(MouseEvent arg0) {}
 	@Override public void mousePressed(MouseEvent arg0) {}

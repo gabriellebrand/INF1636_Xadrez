@@ -3,9 +3,12 @@ package controller;
 public class GameController {
 	private static GameController gameCtrl = null;
 	private BoardController boardCtrl;
+	public FileController fileCtrl;
 	
 	private GameController()
-	{}
+	{
+		fileCtrl = new FileController();
+	}
 	
 	public static GameController getInstance()
 	{
