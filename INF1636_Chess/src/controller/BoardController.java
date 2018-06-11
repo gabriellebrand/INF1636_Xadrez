@@ -10,7 +10,6 @@ import view.BoardView;
 import view.PawnMenu;
 import view.BoardMenu;
 import view.PopupItem;
-import view.Window;
 import observer.*;
 import model.BoardFile;
 import model.BoardModel;
