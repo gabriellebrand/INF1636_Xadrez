@@ -43,7 +43,7 @@ public class BoardController implements MouseListener, ActionListener {
 		boardMenu = new BoardMenu(this);
 		
 		//adiciona as imagens das pecas na boardView
-		String path = "INF1636_Chess/src/images/";
+		String path = "INF1636_Chess/src/images/";// src/images/";
 		Pair[] pieceImages = new Pair[] { new Pair("bishopW", path + "bishop_blue.png"),
 										  new Pair("bishopB", path + "bishop_gray.png"),
 										  new Pair("kingW", path + "king_blue.png"),
@@ -129,6 +129,10 @@ public class BoardController implements MouseListener, ActionListener {
 			GameController gameCtrl = GameController.getInstance();
 			BoardFile boardState = boardModel.getBoardState();
 			gameCtrl.fileCtrl.saveFile(boardState);
+		}
+		else
+		{
+			boardModel.promoteSelectedPiece(event.getActionCommand());
 		}
 	}
 }

@@ -2,15 +2,16 @@ package pieces;
 import model.BoardModel;
 
 public class Piece {
-	int x, y, color;
-	private String id;
+	protected int x, y, color;
+	protected String id = null;
+	protected boolean firstmove;
 
-	public Piece(int newx, int newy, int newcor, String id)
+	protected Piece(int newx, int newy, int newcor, boolean newfirstmove)
 	{
 		this.x=newx;
 		this.y=newy;
 		this.color = newcor;
-		this.id = id;
+		this.firstmove = newfirstmove;
 	}
 	
 	public int getx()
@@ -33,9 +34,11 @@ public class Piece {
 		return id;
 	}
 	
-	public boolean move(BoardModel board, int newx, int newy) //Possivelmente o método é igual para qualquer peca
+	public void move(int newx, int newy)
 	{
-		return false;
+		x=newx;
+		y=newy;
+		firstmove = false;
 	}
 	
 	public boolean testMove (BoardModel board, int newx, int newy)
@@ -43,7 +46,7 @@ public class Piece {
 		return false;
 	}
 	
-	public boolean attacks (BoardModel board, int newx, int newy)
+	public boolean canAttack (BoardModel board, int newx, int newy)
 	{
 		return testMove(board, newx, newy);
 	}

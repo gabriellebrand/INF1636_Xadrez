@@ -3,9 +3,13 @@ import model.BoardModel;
 
 public class Bishop extends Piece {
 	
-	public Bishop(int newx, int newy, int newcor, String id)
+	public Bishop(int newx, int newy, int newcor, boolean newfirstmove)
 	{
-		super(newx, newy, newcor, id);
+		super(newx, newy, newcor, newfirstmove);
+		if (newcor == 0)
+			id = "bishopW";
+		else
+			id = "bishopB";
 	}
 	
 	private boolean blockedPath(BoardModel board, int dx, int dy)
@@ -51,37 +55,17 @@ public class Bishop extends Piece {
 	{
 		int dx = newx-x;
 		int dy = newy-y;
-		if (dx==0 && dy==0)
-		{
+		
+		Piece dstpiece = board.getPiece(newx, newy);
+		if (dx==0 && dy==0) //no move
 			return false;
-		}
+		if (dstpiece != null && dstpiece.getColor() == color) //attack same color piece
+			return false;
+		
 		if (dx==dy || dx==-dy)
 		{
 			return !blockedPath(board, dx, dy);
 		}
 		return false;
 	}
-	
-	public boolean move(BoardModel board, int newx, int newy)
-	{
-		if (newx<0 || newx>7 || newy<0 ||newy>7) //movimento para fora do boarduleiro
-		{
-			return false;
-		}
-		Piece dstpiece = board.getPiece(newx, newy);
-		if (dstpiece!=null && dstpiece.getColor()==color) //tentando comer Piece de mesma cor
-		{
-			return false;
-		}
-		if (!testMove(board, newx, newy)) //teste de movimento valido
-		{
-			return false;
-		}
-		
-		x=newx;
-		y=newy;
-		return true;
-	}
-
-	//boolean draw() TODO
 }

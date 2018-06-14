@@ -3,9 +3,13 @@ import model.BoardModel;
 
 public class Knight extends Piece {
 	
-	public Knight(int newx, int newy, int newcor, String id)
+	public Knight(int newx, int newy, int newcor, boolean newfirstmove)
 	{
-		super(newx, newy, newcor, id);
+		super(newx, newy, newcor, newfirstmove);
+		if (newcor == 0)
+			id = "knightW";
+		else
+			id = "knightB";
 	}
 	
 	
@@ -13,10 +17,13 @@ public class Knight extends Piece {
 	{
 		int dx = newx-x;
 		int dy = newy-y;
-		if (dx==0 && dy==0)
-		{
+		
+		Piece dstpiece = board.getPiece(newx, newy);
+		if (dx==0 && dy==0) //no move
 			return false;
-		}
+		if (dstpiece != null && dstpiece.getColor() == color) //attack same color piece
+			return false;
+		
 		if (Math.abs(dx)==1 && Math.abs(dy)==2)
 		{
 			return true;
@@ -27,27 +34,4 @@ public class Knight extends Piece {
 		}
 		return false;
 	}
-	
-	public boolean move(BoardModel board, int newx, int newy)
-	{
-		if (newx<0 || newx>7 || newy<0 ||newy>7) //movimento para fora do boarduleiro
-		{
-			return false;
-		}
-		Piece dstpiece = board.getPiece(newx, newy);
-		if (dstpiece!=null && dstpiece.getColor()==color) //tentando comer peca de mesma cor
-		{
-			return false;
-		}
-		if (!testMove(board, newx, newy)) //teste de movimento valido
-		{
-			return false;
-		}
-		
-		x=newx;
-		y=newy;
-		return true;
-	}
-
-	//boolean draw() TODO
 }
