@@ -66,14 +66,14 @@ public class Pawn extends Piece {
 	{
 		if (color == 0) //White Pawn
 		{
-			if (Math.abs(newx-x)==1 && newy-y==1)
+			if (Math.abs(newy-y)==1 && newx-x==-1)
 			{
 				return true;
 			}
 		}
 		else //Black Pawn
 		{
-			if (Math.abs(newx-x)==1 && newy-y==-1)
+			if (Math.abs(newy-y)==1 && newx-x==1)
 			{
 				return true;
 			}

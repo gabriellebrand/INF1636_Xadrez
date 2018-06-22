@@ -120,18 +120,50 @@ public class BoardModel implements BoardObservable {
 	
 	public boolean attacked (int x, int y, int color)
 	{
-		for (int i=0; i<8; i++)
-		{
-			for (int j=0; j<8; j++)
-			{
-				if (matrix[i][j] != null && matrix[i][j].getColor() != color 
-					&& matrix[i][j].canAttack(this, x, y))
-				{
+		for (int i=0; i<columns; i++)
+			for (int j=0; j<lines; j++)
+				if (matrix[i][j] != null && matrix[i][j].getColor() != color && matrix[i][j].canAttack(this, x, y))
 					return true;
-				}
-			}
-		}
 		return false;
+	}
+	
+	//returns which player is in check, -1 if no one is in check
+	public int isInCheck()
+	{
+		int checkValue = -1;
+		for (int i=0; i<columns; i++)
+			for (int j=0; j<lines; j++)
+			{
+				if (matrix[i][j] != null)
+					if  (Objects.equals(matrix[i][j].getId(), "kingW")) //Found White King
+					{			
+						if (attacked(i, j, 0))
+							checkValue = 0;
+					}
+					else if (Objects.equals(matrix[i][j].getId(), "kingB")) //Found White King
+					{
+						if (attacked(i, j, 1))
+							checkValue = 1;
+					}
+			}
+		
+		return checkValue;
+	}
+	
+	private boolean testCheckAfterMove(int x1, int y1, int x2, int y2)
+	{
+		BoardModel afterMove = new BoardModel();
+
+		for (int i=0; i<lines; i++) //copying board
+			for (int j=0; j<columns; j++)
+				afterMove.matrix[i][j]=matrix[i][j];
+		
+		afterMove.matrix[x2][y2]=afterMove.matrix[x1][y1]; //making move
+		afterMove.matrix[x1][y1]=null;
+		
+		int checkState = afterMove.isInCheck();
+		
+		return checkState == matrix[x1][y1].getColor(); //checking for changes in checkstate
 	}
 	
 	public void promoteSelectedPiece (String newPiece)
@@ -158,15 +190,26 @@ public class BoardModel implements BoardObservable {
 		else
 		{
 			for (int i=0; i<lines; i++)
-			{
 				for (int j=0; j<columns; j++)
-				{
-					possibleMoves[i][j] = matrix[selx][sely].testMove(this, i, j);
-				}
-			}
+					if (matrix[selx][sely].testMove(this, i, j))
+						possibleMoves[i][j] = !testCheckAfterMove(selx, sely, i, j);
+					else
+						possibleMoves[i][j] = false;	
 		}
 	}
 	
+	private void winner(int player) {
+		System.out.printf("winner %s\n", (player==0)? "white":"black");
+		// TODO Auto-generated method stub
+		
+	}
+
+	private void draw() {
+		System.out.println("draw");
+		// TODO Auto-generated method stub
+		
+	}
+
 	public void testRoque (int x, int y)
 	{
 		if (matrix[selx][sely] == null)
@@ -175,12 +218,7 @@ public class BoardModel implements BoardObservable {
 		String id = matrix[selx][sely].getId();
 		String roqueType = null;
 		
-		if (Objects.equals(id, "rookW") || Objects.equals(id, "rookB"))
-		{
-			Rook rook = (Rook) matrix[selx][sely];
-			roqueType = rook.isRoque(this, x, y);
-		}
-		else if (Objects.equals(id, "kingW") || Objects.equals(id, "kingB"))
+		if (Objects.equals(id, "kingW") || Objects.equals(id, "kingB"))
 		{
 			King king = (King) matrix[selx][sely];
 			roqueType = king.isRoque(this, x, y);
@@ -191,71 +229,32 @@ public class BoardModel implements BoardObservable {
 		
 		if (Objects.equals(roqueType, "WS"))
 		{
-			if (y == 6)//rook left to move
-			{
-				matrix[7][7].move(7,5);
-				
-				matrix[7][5] = matrix[7][7];
-				matrix[7][7] = null;
-			}
-			else//king left to move
-			{
-				matrix[7][4].move(7,6);
-				
-				matrix[7][6] = matrix[7][4];
-				matrix[7][4] = null;
-			}
+			matrix[7][7].move(7,5);
+
+			matrix[7][5] = matrix[7][7];
+			matrix[7][7] = null;
+
 		}
 		else if (Objects.equals(roqueType, "WL"))
 		{
-			if (y == 2)//rook left to move
-			{
-				matrix[7][0].move(7,3);
-				
-				matrix[7][3] = matrix[7][0];
-				matrix[7][0] = null;
-			}
-			else//king left to move
-			{
-				matrix[7][4].move(7,2);
-				
-				matrix[7][2] = matrix[7][4];
-				matrix[7][4] = null;
-			}
+			matrix[7][0].move(7,3);
+
+			matrix[7][3] = matrix[7][0];
+			matrix[7][0] = null;
 		}
 		else if (Objects.equals(roqueType, "BS"))
 		{
-			if (y == 6)//rook left to move
-			{
-				matrix[0][7].move(0,5);
-				
-				matrix[0][5] = matrix[0][7];
-				matrix[0][7] = null;
-			}
-			else//king left to move
-			{
-				matrix[0][4].move(0,6);
-				
-				matrix[0][6] = matrix[0][4];
-				matrix[0][4] = null;
-			}
+			matrix[0][7].move(0,5);
+
+			matrix[0][5] = matrix[0][7];
+			matrix[0][7] = null;
 		}
 		else //if (Objects.equals(roqueType, "BL"))
 		{
-			if (y == 2)//rook left to move
-			{
-				matrix[0][0].move(0,3);
-				
-				matrix[0][3] = matrix[0][0];
-				matrix[0][0] = null;
-			}
-			else//king left to move
-			{
-				matrix[0][4].move(0,2);
-				
-				matrix[0][2] = matrix[0][4];
-				matrix[0][4] = null;
-			}
+			matrix[0][0].move(0,3);
+
+			matrix[0][3] = matrix[0][0];
+			matrix[0][0] = null;
 		}
 		
 	}
@@ -276,11 +275,12 @@ public class BoardModel implements BoardObservable {
 				updatePossibleMoves();
 				//Atualiza a matriz possibleMoves com os movimentos possiveis
 				//	da peça. true = movimento possivel, false = impossivel
+				return;
 			}
-			else if (matrix[selx][sely].testMove(this, x, y))//Move
+			else if (possibleMoves[x][y])//Move
 			{
 				testRoque (x, y);
-
+				
 				System.out.printf("Movido %d %d\n", x, y);
 				
 				matrix[selx][sely].move(x, y);
@@ -292,8 +292,6 @@ public class BoardModel implements BoardObservable {
 				//Atualiza a matriz possibleMoves com os movimentos possiveis
 				//	da peça. true = movimento possivel, false = impossivel
 				
-				testRoque(x, y);
-				
 				if (isPawnPromotion(x, y))
 				{
 					selx = x;
@@ -301,7 +299,11 @@ public class BoardModel implements BoardObservable {
 					GameController.getInstance().getBoardController().
 								   activatePawnPromotion(x, y);
 				}
+				
 				currplayer = 1 - currplayer; //changes 0<->1
+
+				checkEndGame();
+				return;
 			}
 			System.out.printf("Movimento impossivel para %d %d\n", x, y);
 		}
@@ -314,11 +316,12 @@ public class BoardModel implements BoardObservable {
 				sely = y;
 				selected = true;
 				//Atualiza a posicao da peca atualmente selecionada
+				
 				updatePossibleMoves();
 				//Atualiza a matriz possibleMoves com os movimentos possiveis
 				//	da peça. true = movimento possivel, false = impossivel
 			}
-			if (matrix[x][y] == null)
+			else if (matrix[x][y] == null)
 			{
 				System.out.printf("Nao tem peca em %d %d\n", x, y);
 			}
@@ -329,6 +332,34 @@ public class BoardModel implements BoardObservable {
 		}
 	}
 	
+	private boolean checkEndGame() {
+		int checkState = isInCheck();
+		
+		//System.out.println("Check state is " + checkState);
+		for (int x1=0; x1<lines; x1++)
+			for (int y1=0; y1<columns; y1++)
+				if (matrix[x1][y1] != null && matrix[x1][y1].getColor() == currplayer) //pick every player piece
+					for (int x2=0; x2<lines; x2++)
+						for (int y2=0; y2<columns; y2++)
+							if (matrix[x1][y1].testMove(this, x2, y2)) //test every possible move
+							{
+								if (checkState == currplayer)
+								{
+									if (!testCheckAfterMove(x1, y1, x2, y2))
+										return false;
+									
+								}
+								else //valid move and not in check
+									return false;
+							}
+		
+		if (checkState == currplayer)
+			winner(1-currplayer);
+		else
+			draw();
+		return true;
+	}
+
 	private boolean isPawnPromotion (int line, int column)
 	{
 		if(matrix[line][column] != null && matrix[line][column] instanceof Pawn)
@@ -408,9 +439,3 @@ public class BoardModel implements BoardObservable {
 			return null;
 	}
 }
-
-
-
-
-
-	

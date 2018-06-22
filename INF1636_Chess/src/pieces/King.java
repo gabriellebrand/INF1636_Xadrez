@@ -80,7 +80,7 @@ public class King extends Piece {
 		{
 			return !board.attacked(newx, newy, color);
 		}
-		if (isRoque(board, newx, newy) != null)
+		if (isRoque(board, newx, newy) != null && board.isInCheck()!=color)
 		{	
 			return !board.attacked(newx, newy, color);
 		}
