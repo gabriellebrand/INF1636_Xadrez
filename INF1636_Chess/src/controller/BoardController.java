@@ -78,7 +78,6 @@ public class BoardController implements MouseListener, ActionListener {
 	{
 		int coordX = x / boardView.getCellWidth();
 		int coordY = y / boardView.getCellHeight();
-		//System.out.print("line= " + coordY + " column= " + coordX + "\n");
 		
 		return new Pair(coordX, coordY);
 	}
@@ -124,9 +123,6 @@ public class BoardController implements MouseListener, ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent event) {
-		System.out.println("Popup menu item ["
-	            + event.getActionCommand() + "] was pressed.");
-
 		if (event.getActionCommand() == PopupItem.SaveState.getRawValue())
 		{
 			GameController gameCtrl = GameController.getInstance();

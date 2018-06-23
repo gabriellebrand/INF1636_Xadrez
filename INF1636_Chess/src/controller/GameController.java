@@ -20,10 +20,7 @@ public class GameController implements ActionListener {
 	public static GameController getInstance()
 	{
 		if (gameCtrl == null)
-		{
-			System.out.println("create game");
 			gameCtrl = new GameController();
-		}
 		
 		return gameCtrl;
 	}
@@ -77,7 +74,6 @@ public class GameController implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent event) {
-		System.out.println(event.getActionCommand());
 		Object boardFile = fileCtrl.openFile();
 		
 		if (boardFile == null)

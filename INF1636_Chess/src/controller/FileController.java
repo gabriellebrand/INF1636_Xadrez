@@ -52,7 +52,6 @@ public class FileController {
 				String l;
 				while ((l = inputStream.readLine()) != null)
 				{
-					//System.out.println(l);
 					String[] tokens = l.split(" ");
 					if (tokens.length != 4) 
 						throw new IOException("Parse Error");
@@ -62,8 +61,6 @@ public class FileController {
 					
 					boardStatus.board[i][j] = tokens[2];
 					boardStatus.firstMove[i][j] = Integer.parseInt(tokens[3]);
-					
-					System.out.println(boardStatus.board[i][j]);
 				}
 			} catch (IOException e) {
 				System.out.println("[FileController] " + e.getMessage());
