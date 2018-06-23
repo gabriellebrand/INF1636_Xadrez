@@ -22,20 +22,28 @@ public class BoardController implements MouseListener, ActionListener {
 	private BoardMenu boardMenu;
 	
 	public BoardController(JFrame parent) {
+		boardView = new BoardView(600,600,8,8);
 		boardModel = new BoardModel();
-		boardView = new BoardView(800,800,8,8);
-		
 		parent.getContentPane().add(boardView);
+	}
+	
+	public void loadBoard(Object boardFile)
+	{
+		if (boardFile == null)
+			boardModel.loadInitialBoard();
+		else
+			boardModel.loadBoard((BoardFile)boardFile);
 	}
 	
 	public void setupBoard()
 	{
+		
 		if (boardView == null || boardModel == null)
 			return;
 		
 		//adiciona o controller como listener do mouse
 		boardView.addMouseListener(this);
-		//registra a view como observador do modelo (chamar dessa forma nao esta mt certo)
+		//registra a view como observador do modelo
 		registerObserver(boardView);
 		//adiciona o menu popup da promoção do peão
 		pawnMenu = new PawnMenu(this);
@@ -81,11 +89,6 @@ public class BoardController implements MouseListener, ActionListener {
 					  line*boardView.getCellHeight());
 	}
 	
-	public void loadBoard(Object board)
-	{
-		this.boardModel.loadBoard((BoardFile)board);
-	}
-	
 	/* -------- Mouse Listener --------- */
 	@Override
 	public void mouseClicked(MouseEvent event) {}
@@ -109,6 +112,10 @@ public class BoardController implements MouseListener, ActionListener {
 		{
 			boardMenu.show(event);
 		}
+		
+		else if (event.getButton() == 2) { // teste
+			GameController.getInstance().endGame(1);
+		}
 	}
 	
 	@Override public void mouseEntered(MouseEvent arg0) {}
@@ -117,13 +124,9 @@ public class BoardController implements MouseListener, ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent event) {
-		// TODO Auto-generated method stub
 		System.out.println("Popup menu item ["
 	            + event.getActionCommand() + "] was pressed.");
-		//TODO: necessario pegar a posicao linha/coluna para saber
-		//		qual peão está sendo promovido.
-		//		- chamar o metodo do boardModel que promove o peão
-		
+
 		if (event.getActionCommand() == PopupItem.SaveState.getRawValue())
 		{
 			GameController gameCtrl = GameController.getInstance();

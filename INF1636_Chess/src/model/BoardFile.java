@@ -6,7 +6,7 @@ package model;
  * line 2: [selected] (0 ou 1)
  * line 3: [selx] (int)
  * line 4: [sely] (int)
- * line 5 - end: [line][column][pieceType] (int,int,String)
+ * line 5 - end: [line][column][pieceType][firstMove] (int,int,String,int)
  */
 
 public class BoardFile {
@@ -14,4 +14,5 @@ public class BoardFile {
 	public boolean selected;
 	public int selx, sely;
 	public String[][] board;
+	public int[][] firstMove;
 }

@@ -23,7 +23,13 @@ public class BoardModel implements BoardObservable {
 	private int selx, sely;
 	private List<BoardObserver> lst = new ArrayList<BoardObserver>();
 	
-	public BoardModel() //standard board
+	public BoardModel()
+	{
+		loadInitialBoard();
+		this.update();
+	}
+	
+	public void loadInitialBoard()
 	{
 		matrix = new Piece[lines][columns];
 		
@@ -50,9 +56,10 @@ public class BoardModel implements BoardObservable {
 			matrix[6][i] = new Pawn (6,i,0, true);
 
 		//Inicializa matriz que armazena movimentos possiveis da peca
+		currplayer = 0;
 		possibleMoves = new Boolean[lines][columns];
 		updatePossibleMoves();
-		
+		selected = false;
 		this.update();
 	}
 
@@ -75,28 +82,28 @@ public class BoardModel implements BoardObservable {
 								   0, boardFile.board[i][j].length()-1);
 					String color = boardFile.board[i][j].substring(
 								   boardFile.board[i][j].length()-1);
-					
+					boolean firstMove = boardFile.firstMove[i][j] == 1;
 					System.out.println("piece= " + piece + " color= " + color);
 					int player = color.equals("B") ? 1 : 0;
 					System.out.println("player= " + player);
 					switch (piece) {
 					case "bishop":
-						matrix[i][j] = new Bishop(i,j, player, false);
+						matrix[i][j] = new Bishop(i,j, player, firstMove);
 						break;
 					case "king":
-						matrix[i][j] = new King(i,j, player, false); //TODO recover actual firstmove state
+						matrix[i][j] = new King(i,j, player, firstMove);
 						break;
 					case "knight":
-						matrix[i][j] = new Knight(i,j, player, false);
+						matrix[i][j] = new Knight(i,j, player, firstMove);
 						break;
 					case "pawn":
-						matrix[i][j] = new Pawn(i,j, player, false); //TODO recover actual firstmove state
+						matrix[i][j] = new Pawn(i,j, player, firstMove);
 						break;
 					case "queen":
-						matrix[i][j] = new Queen(i,j, player, false);
+						matrix[i][j] = new Queen(i,j, player, firstMove);
 						break;
 					case "rook":
-						matrix[i][j] = new Rook(i,j, player, false); //TODO recover actual firstmove state
+						matrix[i][j] = new Rook(i,j, player, firstMove);
 						break;
 					}
 				}
@@ -106,6 +113,25 @@ public class BoardModel implements BoardObservable {
 		selected = false;
 		updatePossibleMoves();
 		this.update();
+	}
+	
+	public int[][] getPiecesFirstMove()
+	{
+		int statusMatrix[][] = new int[lines][columns];
+		
+		for(int i=0; i<lines; i++)
+		{
+			for(int j=0; j<columns;j++)
+			{
+				//se existir uma peca na posicao ij, pega o status do firstMove, se nao, coloca -1
+				int status = -1;
+				if (matrix[i][j] != null)
+					status = matrix[i][j].getFirstMove()? 1 : 0;
+			
+				statusMatrix[i][j] = status;
+			}
+		}
+		return statusMatrix;
 	}
 	
 	public Piece getPiece(int x, int y)
@@ -201,12 +227,14 @@ public class BoardModel implements BoardObservable {
 	private void winner(int player) {
 		System.out.printf("winner %s\n", (player==0)? "white":"black");
 		// TODO Auto-generated method stub
+		GameController.getInstance().endGame(player);
 		
 	}
 
 	private void draw() {
 		System.out.println("draw");
 		// TODO Auto-generated method stub
+		GameController.getInstance().endGame(-1);
 		
 	}
 
@@ -376,6 +404,7 @@ public class BoardModel implements BoardObservable {
 		BoardFile boardState = new BoardFile();
 		
 		boardState.board = this.getPiecesPosition();
+		boardState.firstMove = this.getPiecesFirstMove();
 		boardState.currplayer = this.currplayer;
 		boardState.selected = this.selected;
 		boardState.selx = this.selx;

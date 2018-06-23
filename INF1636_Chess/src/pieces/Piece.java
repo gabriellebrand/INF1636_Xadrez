@@ -34,6 +34,11 @@ public class Piece {
 		return id;
 	}
 	
+	public boolean getFirstMove()
+	{
+		return firstmove;
+	}
+	
 	public void move(int newx, int newy)
 	{
 		x=newx;

@@ -33,9 +33,12 @@ public class FileController {
 			BufferedReader inputStream = null;
 			
 			boardStatus.board = new String[8][8];
+			boardStatus.firstMove = new int[8][8];
 			for (int i=0;i<8;i++)
+			{
 				Arrays.fill(boardStatus.board[i], null);
-			
+				Arrays.fill(boardStatus.firstMove[i], -1);
+			}
 			try {
 				inputStream = new BufferedReader(new FileReader(fc.getSelectedFile().getPath()));
 				
@@ -51,13 +54,14 @@ public class FileController {
 				{
 					//System.out.println(l);
 					String[] tokens = l.split(" ");
-					if (tokens.length != 3) 
+					if (tokens.length != 4) 
 						throw new IOException("Parse Error");
 					
 					int i = Integer.parseInt(tokens[0]);
 					int j = Integer.parseInt(tokens[1]);
 					
 					boardStatus.board[i][j] = tokens[2];
+					boardStatus.firstMove[i][j] = Integer.parseInt(tokens[3]);
 					
 					System.out.println(boardStatus.board[i][j]);
 				}
@@ -104,15 +108,16 @@ public class FileController {
 				outputStream.println(boardState.sely);
 				
 				String[][] board = boardState.board;
-				if (board != null)
+				int[][] firstMoves = boardState.firstMove;
+				if (board != null && firstMoves != null)
 				{
 					for (int i = 0; i < board.length; i++)
 					{
 						for (int j = 0; j < board.length; j++)
 						{
-							if (board[i][j] != null)
+							if (board[i][j] != null && firstMoves[i][j] >= 0)
 							{
-								String s = i + " " + j + " " + board[i][j];
+								String s = i + " " + j + " " + board[i][j] + " " + firstMoves[i][j];
 								outputStream.println(s);
 							}
 						}
