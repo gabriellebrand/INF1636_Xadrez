@@ -1,0 +1,19 @@
+0
+0
+5
+1
+0 0 kingB 0
+1 7 queenW 0
+2 2 pawnW 0
+3 0 pawnW 0
+4 3 pawnW 0
+5 2 pawnW 0
+5 7 knightW 0
+6 1 pawnB 0
+6 3 rookW 0
+6 4 kingW 0
+6 5 pawnW 1
+6 6 pawnW 1
+6 7 pawnW 1
+7 1 knightW 1
+7 2 bishopW 1

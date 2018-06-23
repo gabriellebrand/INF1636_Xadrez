@@ -16,12 +16,9 @@ public class King extends Piece {
 	
 	public String isRoque (BoardModel board, int newx, int newy)
 	{
-		int dx = newx-x;
-		int dy = newy-y;
-
 		if (color == 0 && x == 7 && y == 4 && firstmove) //White King
 		{
-			if (dx == 0 && dy == 2) //short roque
+			if (newx == 7 && newy == 7) //short roque
 			{
 				Piece rook = board.getPiece(7, 7);
 				if (!board.validPiece(7, 5) && !board.validPiece(7, 6)
@@ -30,7 +27,7 @@ public class King extends Piece {
 					return "WS";
 				}
 			}
-			else if (dx == 0 && dy == -2)//long roque
+			else if (newx == 7 && newy == 0)//long roque
 			{
 				Piece rook = board.getPiece(7, 0);
 				if (!board.validPiece(7, 3) && !board.validPiece(7, 2) && !board.validPiece(7, 1)
@@ -42,7 +39,7 @@ public class King extends Piece {
 		}
 		else if (color == 1 && x == 0 && y == 4 && firstmove) //Black King
 		{
-			if (dx == 0 && dy == 2) //short roque
+			if (newx == 0 && newy == 7) //short roque
 			{
 				Piece rook = board.getPiece(0, 7);
 				if (!board.validPiece(0, 5) && !board.validPiece(0, 6)
@@ -51,7 +48,7 @@ public class King extends Piece {
 					return "BS";
 				}
 			}
-			else if (dx == 0 && dy == -2)//long roque
+			else if (newx == 0 && newy == 0)//long roque
 			{
 				Piece rook = board.getPiece(0, 0);
 				if (!board.validPiece(0, 3) && !board.validPiece(0, 2) && !board.validPiece(0, 1)
@@ -78,12 +75,32 @@ public class King extends Piece {
 		
 		if (Math.abs(dx) <= 1 &&  Math.abs(dy) <= 1)
 		{
-			return !board.attacked(newx, newy, color);
+			if (kingBeside(board, newx, newy))
+				return false;
+			else
+				return !board.attacked(newx, newy, color);
 		}
-		if (isRoque(board, newx, newy) != null && board.isInCheck()!=color)
-		{	
-			return !board.attacked(newx, newy, color);
-		}
+//		if (isRoque(board, newx, newy) != null && board.isInCheck()!=color)
+//		{	
+//			return !board.attacked(newx, newy, color);
+//		}
+		return false;
+	}
+
+	private boolean kingBeside(BoardModel board, int newx, int newy) {
+		for (int i=-1; i<=1; i++)
+			for (int j=-1; j<=1; j++)
+			{
+				if (board.validPiece(newx+i, newy+j))
+				{
+					Piece otherKing = board.getPiece(newx+i, newy+j);
+					if (otherKing instanceof King && !(newx+i==x && newy+j==y))
+					{
+						System.out.println("king beside " + newx + newy + " at " + (newx+i) + (newy+j) + " (" + i + j + ")");
+						return true;
+					}
+				}
+			}
 		return false;
 	}
 }

@@ -51,7 +51,7 @@ public class BoardController implements MouseListener, ActionListener {
 		boardMenu = new BoardMenu(this);
 		
 		//adiciona as imagens das pecas na boardView
-		String path = "INF1636_Chess/src/images/";// src/images/";
+		String path = "src/images/"; //INF1636_Chess/src/images/"; 
 		Pair[] pieceImages = new Pair[] { new Pair("bishopW", path + "bishop_blue.png"),
 										  new Pair("bishopB", path + "bishop_gray.png"),
 										  new Pair("kingW", path + "king_blue.png"),

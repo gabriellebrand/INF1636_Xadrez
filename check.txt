@@ -1,0 +1,35 @@
+1
+0
+5
+3
+0 0 rookB 1
+0 4 kingB 1
+0 5 bishopB 1
+0 6 knightB 1
+0 7 rookB 1
+1 0 knightB 0
+1 2 pawnB 1
+1 4 pawnB 1
+1 5 pawnB 1
+1 6 pawnB 1
+1 7 pawnB 1
+2 0 pawnB 0
+3 0 pawnW 0
+3 1 pawnB 0
+3 3 pawnW 0
+3 5 bishopB 0
+4 1 pawnW 0
+4 2 bishopW 0
+4 5 queenB 0
+5 7 knightW 0
+6 2 pawnW 1
+6 3 pawnW 1
+6 4 kingW 0
+6 5 pawnW 1
+6 6 pawnW 1
+6 7 pawnW 1
+7 0 rookW 1
+7 1 knightW 1
+7 2 bishopW 1
+7 3 queenW 1
+7 5 rookW 0

@@ -136,11 +136,15 @@ public class BoardModel implements BoardObservable {
 	
 	public Piece getPiece(int x, int y)
 	{
+		if (x<0 || y<0 || x>=lines || y>=columns)
+			return null;
 		return matrix[x][y];
 	}
 	
 	public boolean validPiece(int x, int y)
 	{	
+		if (x<0 || y<0 || x>=lines || y>=columns)
+			return false;
 		return matrix[x][y] != null;
 	}
 	
@@ -148,8 +152,10 @@ public class BoardModel implements BoardObservable {
 	{
 		for (int i=0; i<columns; i++)
 			for (int j=0; j<lines; j++)
+			{
 				if (matrix[i][j] != null && matrix[i][j].getColor() != color && matrix[i][j].canAttack(this, x, y))
 					return true;
+			}
 		return false;
 	}
 	
@@ -238,53 +244,65 @@ public class BoardModel implements BoardObservable {
 		
 	}
 
-	public void testRoque (int x, int y)
-	{
-		if (matrix[selx][sely] == null)
-			return;
-		
-		String id = matrix[selx][sely].getId();
+	public boolean testRoque (int x, int y)
+	{		
 		String roqueType = null;
 		
-		if (Objects.equals(id, "kingW") || Objects.equals(id, "kingB"))
+		if (matrix[selx][sely] != null && matrix[selx][sely] instanceof King)
 		{
 			King king = (King) matrix[selx][sely];
 			roqueType = king.isRoque(this, x, y);
 		}
 		
 		if (roqueType == null)
-			return;
+			return false;
 		
 		if (Objects.equals(roqueType, "WS"))
 		{
+			matrix[7][4].move(7,6);
 			matrix[7][7].move(7,5);
 
+			matrix[7][6] = matrix[7][4];
 			matrix[7][5] = matrix[7][7];
+			
+			matrix[7][4] = null;
 			matrix[7][7] = null;
 
 		}
 		else if (Objects.equals(roqueType, "WL"))
 		{
+			matrix[7][4].move(7,2);
 			matrix[7][0].move(7,3);
 
+			matrix[7][2] = matrix[7][4];
 			matrix[7][3] = matrix[7][0];
+
+			matrix[7][4] = null;
 			matrix[7][0] = null;
 		}
 		else if (Objects.equals(roqueType, "BS"))
 		{
+			matrix[0][4].move(0,6);
 			matrix[0][7].move(0,5);
 
+			matrix[0][6] = matrix[0][4];
 			matrix[0][5] = matrix[0][7];
+
+			matrix[0][4] = null;
 			matrix[0][7] = null;
 		}
 		else //if (Objects.equals(roqueType, "BL"))
 		{
+			matrix[0][4].move(0,2);
 			matrix[0][0].move(0,3);
 
+			matrix[0][2] = matrix[0][4];
 			matrix[0][3] = matrix[0][0];
+
+			matrix[0][4] = null;
 			matrix[0][0] = null;
 		}
-		
+		return true;		
 	}
 	
 	public void click(int x, int y)
@@ -295,6 +313,19 @@ public class BoardModel implements BoardObservable {
 			if (matrix[x][y] != null &&
 				matrix[x][y].getColor()==matrix[selx][sely].getColor()) // Reselect
 			{
+
+				if (testRoque (x, y))
+				{
+					System.out.println("Roque");
+					
+					selected = false;
+					currplayer = 1 - currplayer; //changes 0<->1
+					
+					updatePossibleMoves();
+					checkEndGame();
+					
+					return;
+				}
 				
 				System.out.printf("Reselecionado %d %d\n", x, y);
 				selx = x;
@@ -306,9 +337,7 @@ public class BoardModel implements BoardObservable {
 				return;
 			}
 			else if (possibleMoves[x][y])//Move
-			{
-				testRoque (x, y);
-				
+			{				
 				System.out.printf("Movido %d %d\n", x, y);
 				
 				matrix[selx][sely].move(x, y);
@@ -363,7 +392,8 @@ public class BoardModel implements BoardObservable {
 	private boolean checkEndGame() {
 		int checkState = isInCheck();
 		
-		//System.out.println("Check state is " + checkState);
+		if (checkState >= 0)
+			System.out.println("Check in " + (checkState==0? "white":"black"));
 		for (int x1=0; x1<lines; x1++)
 			for (int y1=0; y1<columns; y1++)
 				if (matrix[x1][y1] != null && matrix[x1][y1].getColor() == currplayer) //pick every player piece
